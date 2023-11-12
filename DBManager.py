@@ -18,9 +18,10 @@ class DBManager:
                         "FROM company "
                         "JOIN vacancies USING (company_id) "
                         "GROUP BY company.company_name")
-
+            result = cur.fetchall()
         conn.commit()
         conn.close()
+        return result
 
     def get_all_vacancies(self):
         """получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на
@@ -33,9 +34,10 @@ class DBManager:
                         "FROM company "
                         "JOIN vacancies USING (company_id)"
                         )
-
+            result = cur.fetchall()
         conn.commit()
         conn.close()
+        return result
 
     def get_avg_salary(self):
         """получает среднюю зарплату по вакансиям"""
@@ -44,9 +46,11 @@ class DBManager:
 
         with conn.cursor() as cur:
             cur.execute("SELECT AVG(salary) AS average_salary FROM vacancies")
+            result = cur.fetchall()
 
         conn.commit()
         conn.close()
+        return result
 
     def get_vacancies_with_higher_salary(self):
         """получает список всех вакансий, у которых зарплата выше средней по всем вакансиям"""
@@ -56,9 +60,10 @@ class DBManager:
         with conn.cursor() as cur:
             cur.execute("SELECT * FROM vacancies "
                         "WHERE salary >= (SELECT AVG(salary) FROM vacancies)")
-
+            result = cur.fetchall()
         conn.commit()
         conn.close()
+        return result
 
     def get_vacancies_with_keyword(self, word):
         """получает список всех вакансий, в названии которых содержатся переданные в метод слова, например python"""
@@ -71,6 +76,8 @@ class DBManager:
                         f"OR LOWER(vacancies_name) LIKE '{word}%' "
                         f"OR LOWER(requirements) LIKE '%{word}%' OR LOWER(requirements) LIKE '%{word}' "
                         f"OR LOWER(requirements) LIKE '{word}%'")
-
+            result = cur.fetchall()
         conn.commit()
         conn.close()
+        return result
+
